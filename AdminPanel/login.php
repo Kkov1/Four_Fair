@@ -1,6 +1,7 @@
 <?php
 session_start();
 require "../config/connection.php";
+
 ?>
 
 <!DOCTYPE html>
@@ -50,18 +51,18 @@ require "../config/connection.php";
                                 $_SESSION['login'] = true;
                                 header('location: ../AdminPanel');
                             } else {
-                    ?>
-                    <div class="alert alert-warning text-center " role="alert">
-                        Password Salah
-                    </div>
-                    <?php
+                                ?>
+                                <div class="alert alert-warning text-center " role="alert">
+                                    Password Salah
+                                </div>
+                                <?php
                             }
                         } else {
                             ?>
-                    <div class="alert alert-warning text-center " role="alert">
-                        Akun Tidak Tersedia
-                    </div>
-                    <?php
+                            <div class="alert alert-warning text-center " role="alert">
+                                Akun Tidak Tersedia
+                            </div>
+                            <?php
                         }
                     }
                     ?>

@@ -11,17 +11,17 @@
                     <a class="nav-link active" aria-current="page" href="../AdminPanel/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="kategori.php">Kategori</a>
+                    <a class="nav-link" href="../AdminPanel/kategori.php">Kategori</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="produk.php">Produk</a>
+                    <a class="nav-link" href="../AdminPanel/produk.php">Produk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
+                    <a class="nav-link" href="../AdminPanel/logout.php  ">Logout</a>
                 </li>
             </ul>
             <span class="navbar-text text-danger">
-                <?php echo $_SESSION['username'];?>
+                <?php echo $_SESSION['username']; ?>
             </span>
         </div>
     </div>
