@@ -107,8 +107,6 @@ $queryjumlahkategori = mysqli_num_rows($queryKategori);
                                         $id = $_POST['kategori_id'];
                                         $delete = mysqli_query($conn, "DELETE FROM kategori WHERE id = '$id'");
                                         if ($delete) {
-
-                                            // Redirect to refresh the page
                                             echo '<meta http-equiv="refresh" content="2; url=kategori.php" />';
                                         } else {
                                             echo 'Gagal menghapus data.';
@@ -116,7 +114,7 @@ $queryjumlahkategori = mysqli_num_rows($queryKategori);
                                     }
                                     ?>
                                 </td>
-                            </tr>
+                            </tr>''
                             <?php
                             $number++;
                         }
