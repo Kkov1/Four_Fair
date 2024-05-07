@@ -2,7 +2,7 @@
 require "session.php";
 require "../config/connection.php";
 
-$kategori = mysqli_query($conn, "SELECT * FROM kategori");
+$kategori_result = mysqli_query($conn, "SELECT * FROM kategori");
 
 function generateRandomString($length = 10)
 {
@@ -49,9 +49,9 @@ function generateRandomString($length = 10)
                     </div>
                     <div class="mb-3">
                         <label for="kategori" class="form-label">Kategori</label>
-                        <select name="kategori" id="kategori" class="form-control">
+                        <select name="kategori_id" id="kategori" class="form-control">
                             <option value="pilih">Pilihlah</option>
-                            <?php while ($data = mysqli_fetch_array($kategori)): ?>
+                            <?php while ($data = mysqli_fetch_array($kategori_result)): ?>
                                 <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
                             <?php endwhile; ?>
                         </select>
@@ -69,68 +69,71 @@ function generateRandomString($length = 10)
                         <textarea name="deskripsi" id="deskripsi" cols="30" rows="10" class="form-control"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="ketersediaan" class="form-label">Ketersediaan</label>
-                        <select name="ketersediaan" id="ketersediaan" class="form-control">
-                            <option value="tersedia">tersedia</option>
-                            <option value="habis">habis</option>
+                        <label for="ketersediaan_stok" class="form-label">Ketersediaan Stok</label>
+                        <select name="ketersediaan_stok" id="ketersediaan_stok" class="form-control">
+                            <option value="tersedia">Tersedia</option>
+                            <option value="habis">Habis</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
                     <?php
                     if (isset($_POST['simpan'])) {
                         $nama = htmlspecialchars($_POST['nama']);
-                        $kategori = htmlspecialchars($_POST['kategori']);
+                        $kategori_id = htmlspecialchars($_POST['kategori_id']);
                         $harga = htmlspecialchars($_POST['harga']);
                         $deskripsi = htmlspecialchars($_POST['deskripsi']);
-                        $stok = htmlspecialchars($_POST['ketersediaan']);
+                        $stok = htmlspecialchars($_POST['ketersediaan_stok']);
 
-                        if ($nama == '' || $kategori == '' || $harga == '' || $deskripsi == '') {
+                        if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '') {
                             ?>
                             <div class="alert alert-warning mt-3" role="alert">
                                 Nama, Kategori, Harga, dan Deskripsi Wajib diisi!
                             </div>
                             <?php
                         } else {
-                            $target_dir = "../resource/img/";
-                            $nama_file = basename($_FILES["foto"]["name"]);
-                            $target_file = $target_dir . $nama_file;
-                            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                            $image_size = $_FILES["foto"]["size"];
-                            $random_name = generateRandomString(20);
-                            $new_name = $random_name . "." . $imageFileType;
+                            if ($_FILES["foto"]["name"] == "") {
+                                ?>
+                                <div class="alert alert-warning mt-3" role="alert">
+                                    Foto Produk harus diisi!
+                                </div>
+                                <?php
+                            } else {
+                                $target_dir = "../resource/img/";
+                                $nama_file = basename($_FILES["foto"]["name"]);
+                                $target_file = $target_dir . $nama_file;
+                                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                                $image_size = $_FILES["foto"]["size"];
+                                $random_name = generateRandomString(20);
+                                $new_name = $random_name . "." . $imageFileType;
 
-                            if ($nama_file != "") {
                                 if ($image_size >= 700000) {
                                     ?>
                                     <div class="alert alert-warning mt-3" role="alert">
                                         Ukuran file tidak boleh lebih dari 700KB!
                                     </div>
                                     <?php
+                                } elseif (!in_array($imageFileType, ['jpeg', 'jpg', 'png', 'gif'])) {
+                                    ?>
+                                    <div class="alert alert-warning mt-3" role="alert">
+                                        File harus bertipe JPEG/JPG, PNG, GIF!
+                                    </div>
+                                    <?php
                                 } else {
-                                    if ($imageFileType != 'jpeg' && $imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'gif') {
+                                    move_uploaded_file($_FILES["foto"]["tmp_name"], $target_dir . $new_name);
+
+                                    $tambah_produk = mysqli_query($conn, "INSERT INTO produk (kategori_id, nama, harga, foto, deskripsi, ketersediaan_stok) VALUES ('$kategori_id', '$nama', '$harga', '$new_name', '$deskripsi', '$stok')");
+
+                                    if ($tambah_produk) {
                                         ?>
-                                        <div class="alert alert-warning mt-3" role="alert">
-                                            File harus bertipe JPEG/JPG, PNG, GIF!
+                                        <div class="alert alert-primary mt-3" role="alert">
+                                            Data Berhasil Disimpan
                                         </div>
+                                        <meta http-equiv="refresh" content="1; url=produk.php" />
                                         <?php
                                     } else {
-                                        move_uploaded_file($_FILES["foto"]["tmp_name"], $target_dir . $new_name);
+                                        echo mysqli_error($conn);
                                     }
                                 }
-                            }
-                            $tambah_produk = mysqli_query($conn, "INSERT INTO produk (kategori_id, nama, harga, foto, deskripsi, ketersediaan_stok) VALUES ('$kategori', '$nama', '$harga', '$new_name', '$deskripsi', '$stok')");
-
-                            if ($tambah_produk) {
-                                ?>
-                                <div class="alert alert-primary mt-3" role="alert">
-                                    Data Berhasil Disimpan
-                                </div>
-                                <?php
-                                header("Refresh: 1; URL=../AdminPanel/produk.php");
-                                exit();
-
-                            } else {
-                                echo mysqli_error($conn);
                             }
                         }
                     }
