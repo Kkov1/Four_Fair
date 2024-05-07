@@ -41,6 +41,21 @@ if (isset($_POST['edit'])) {
 <?php
 
 if (isset($_POST['delete'])) {
+    $query_check = mysqli_query($conn, "SELECT * FROM produk WHERE kategori_id='$id'");
+    $data_count = mysqli_num_rows($query_check);
+
+    if ($data_count > 0) {
+        ?>
+        <div class="alert alert-warning mt-3" role="alert">
+            Kategori tidak bisa dihapus karena sudah digunakan pada produk
+        </div>
+
+        <?Php
+        header("Refresh: 1; URL=kategori.php");
+        die();
+    }
+
+
     $hapus = mysqli_query($conn, "DELETE FROM kategori WHERE id='$id'");
     if ($hapus) {
         ?>
@@ -77,10 +92,10 @@ if (isset($_POST['delete'])) {
 
 <body>
     <?php require "navbar.php"; ?>
-    <div class="container">
+    <div class="container mt-5">
         <h2>Detail Kategori</h2>
-        <div class="col-12 col-md-6">
-            <form action="" method="post">
+        <div class="col-12 col-md-6 mb-5">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="kategori" class="form-label">Kategori</label>
                     <input type="text" id="kategori" name="kategori" class="form-control"
