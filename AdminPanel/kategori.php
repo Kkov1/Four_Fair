@@ -55,17 +55,17 @@ $queryjumlahkategori = mysqli_num_rows($queryKategori);
                     </thead>
                     <tbody>
                         <?php
-
                         $number = 1;
                         if ($queryjumlahkategori == 0) {
-
+                            // apabila field pada tabel kategori tidak ada
                             ?>
                             <tr>
                                 <td colspan="3" class="text-center">Kategori tidak tersedia</td>
                             </tr>
                             <?php
                         } else {
-
+                            // apabila ada kategori
+                        
                             while ($data = mysqli_fetch_array($queryKategori)) {
                                 ?>
                                 <tr>

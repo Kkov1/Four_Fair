@@ -36,7 +36,6 @@ function generateRandomString($length = 10)
 </head>
 
 <body>
-
     <?php require "navbar.php"; ?>
     <div class="container mt-4">
         <h3>Tambah Produk</h3>
@@ -51,6 +50,7 @@ function generateRandomString($length = 10)
                         <label for="kategori" class="form-label">Kategori</label>
                         <select name="kategori_id" id="kategori" class="form-control">
                             <option value="pilih">Pilihlah</option>
+                            <!-- pengulangan untuk mengambil nama kategori dan dimunculkan di option -->
                             <?php while ($data = mysqli_fetch_array($kategori_result)): ?>
                                 <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
                             <?php endwhile; ?>
@@ -78,6 +78,7 @@ function generateRandomString($length = 10)
                     <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
                     <?php
                     if (isset($_POST['simpan'])) {
+                        // apabila button simpan dipencet
                         $nama = htmlspecialchars($_POST['nama']);
                         $kategori_id = htmlspecialchars($_POST['kategori_id']);
                         $harga = htmlspecialchars($_POST['harga']);
@@ -85,12 +86,14 @@ function generateRandomString($length = 10)
                         $stok = htmlspecialchars($_POST['ketersediaan_stok']);
 
                         if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '') {
+                            // apabila form itu kosong makan muncul alert
                             ?>
                             <div class="alert alert-warning mt-3" role="alert">
                                 Nama, Kategori, Harga, dan Deskripsi Wajib diisi!
                             </div>
                             <?php
                         } else {
+                            // apabila file tidak diisi
                             if ($_FILES["foto"]["name"] == "") {
                                 ?>
                                 <div class="alert alert-warning mt-3" role="alert">
@@ -98,6 +101,7 @@ function generateRandomString($length = 10)
                                 </div>
                                 <?php
                             } else {
+                                // kalau file terisi
                                 $target_dir = "../resource/img/";
                                 $nama_file = basename($_FILES["foto"]["name"]);
                                 $target_file = $target_dir . $nama_file;
@@ -107,20 +111,25 @@ function generateRandomString($length = 10)
                                 $new_name = $random_name . "." . $imageFileType;
 
                                 if ($image_size >= 700000) {
+                                    // apabila file lebih dari 700k, maka muncul alert
                                     ?>
                                     <div class="alert alert-warning mt-3" role="alert">
                                         Ukuran file tidak boleh lebih dari 700KB!
                                     </div>
                                     <?php
                                 } elseif (!in_array($imageFileType, ['jpeg', 'jpg', 'png', 'gif'])) {
+                                    // apabila tipe file lain dari itu, maka muncul alert
                                     ?>
                                     <div class="alert alert-warning mt-3" role="alert">
                                         File harus bertipe JPEG/JPG, PNG, GIF!
                                     </div>
                                     <?php
                                 } else {
+                                    // jika semua terpenuhi, masukan foto kedalam folder
                                     move_uploaded_file($_FILES["foto"]["tmp_name"], $target_dir . $new_name);
 
+
+                                    // jika semua terpenuhi buat query untuk memasukkannya kedalam tabel produk
                                     $tambah_produk = mysqli_query($conn, "INSERT INTO produk (kategori_id, nama, harga, foto, deskripsi, ketersediaan_stok) VALUES ('$kategori_id', '$nama', '$harga', '$new_name', '$deskripsi', '$stok')");
 
                                     if ($tambah_produk) {

@@ -40,17 +40,20 @@ require "../config/connection.php";
                 <div>
                     <?php
                     if (isset($_POST['login-btn'])) {
+                        // apabila button login dipencet
                         $username = htmlspecialchars($_POST['username']);
                         $password = htmlspecialchars($_POST['password']);
                         $query = mysqli_query($conn, "SELECT * FROM  users WHERE username ='$username'");
                         $resultD = mysqli_num_rows($query);
                         $data = mysqli_fetch_array($query);
                         if ($resultD > 0) {
+                            // apabila akun tersedia
                             if (password_verify($password, $data['password'])) {
                                 $_SESSION['username'] = $data['username'];
                                 $_SESSION['login'] = true;
                                 header('location: ../AdminPanel');
                             } else {
+                                // apabila tidak
                                 ?>
                                 <div class="alert alert-warning text-center " role="alert">
                                     Password Salah
