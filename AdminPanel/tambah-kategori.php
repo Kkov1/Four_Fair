@@ -36,18 +36,21 @@ $queryKategori = mysqli_query($conn, "SELECT * FROM kategori");
                 </form>
                 <?php
                 if (isset($_POST['simpan'])) {
+                    // apabila button simpan dipencet
                     $kategori = htmlspecialchars($_POST['kategori']);
 
                     $namasama = mysqli_query($conn, "SELECT nama FROM kategori WHERE nama = '$kategori'");
                     $jumlahkategoribaru = mysqli_num_rows($namasama);
 
                     if ($jumlahkategoribaru > 0) {
+                        // apabila nama kategori sudah ada maka muncul alert
                         ?>
                         <div class="alert alert-warning mt-3" role="alert">
                             Nama Kategori Sudah Ada
                         </div>
                         <?php
                     } else {
+                        // apabila semua terpenuhi, buat query simpan ke tabel kategori
                         $simpankategori = mysqli_query($conn, "INSERT INTO kategori (nama) VALUES ('$kategori')");
                         if ($simpankategori) {
                             ?>

@@ -7,8 +7,10 @@ $query = mysqli_query($conn, "SELECT * FROM kategori WHERE id = '" . mysqli_real
 $data = mysqli_fetch_array($query);
 
 if (isset($_POST['edit'])) {
+    // apabila button edit dipencet
     $kategori = htmlspecialchars($_POST['kategori']);
     if ($data['nama'] == $kategori) {
+        // apabila nama yang diganti sama dengan nama kategori sebelummnya
         header("Location: kategori.php");
         exit();
     } else {
@@ -16,6 +18,7 @@ if (isset($_POST['edit'])) {
         $jumlahdata = mysqli_num_rows($query);
 
         if ($jumlahdata > 0) {
+            // jika nama kategori lebih dari 0
             ?>
             <div class="alert alert-warning mt-3" role="alert">
                 Kategori Sudah Ada

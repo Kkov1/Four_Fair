@@ -47,13 +47,16 @@ $jumlahproduk = mysqli_num_rows($query);
                     </thead>
                     <tbody>
                         <?php
+
                         if ($jumlahproduk == 0) {
+                            // apabila produk tidak ada
                             ?>
                             <tr>
                                 <td colspan="6" class="text-center">Produk tidak tersedia</td>
                             </tr>
                             <?php
                         } else {
+                            // apabila produk tersedia, maka lakukan pengulangan
                             $jumlah = 1;
                             while ($data = mysqli_fetch_array($query)) {
                                 ?>
