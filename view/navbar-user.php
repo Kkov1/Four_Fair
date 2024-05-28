@@ -4,20 +4,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-    integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>Four Deals</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary p-3">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary p-2">
         <div class="container-xl mx-5">
-            <a class="navbar-brand mx-3" href="#">
+            <a class="navbar-brand px-4" href="index.php">
                 <img src="../resource/img/logo_fourdeals.png" alt="Bootstrap" width="40" height="40">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -27,20 +23,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item">
-                        <form class="d-flex align-items-center" role="search">
-                            <input class="Style form-control me-2 border-black bg-transparent" type="Search.."
-                                placeholder="&#xf002; S e a r c h" aria-label="Search"
-                                style="width: 750px; font-family: FontAwesome , Arial;">
+                        <form class="d-flex align-items-center" method="get" action="produk.php">
+                            <div class="input-group input-group-lg mt-4">
+                                <input type="text" class="form-control" placeholder="Cari Barang" aria-label="pencarian"
+                                    name="keyword" aria-describedby="basic-addon2" style="width: 750px;height: 45px">
+                            </div>
                         </form>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="nav-link" href="#"><i class="bi bi-cart3" style="font-size: 24px;"></i></a>
+                        <a class="nav-link px-4 " href="#"><i class="fa-solid fa-cart-shopping"
+                                style="font-size: 1.5rem;"></i></a>
                     </li>
                     <li class="nav-item me-3">
                         <h3 class="fw-lighter">|</h3>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="btn btn-login" href="#" role="button">Masuk</a>
+                        <a class="btn btn-login" href="#" role="button">Login</a>
                     </li>
                     <li class="nav-item me-3">
                         <a class="btn btn-daftar" href="#" role="button">Daftar</a>
@@ -59,7 +57,7 @@
             margin: 0;
             padding: 0;
             font-family: Poppins;
-            font-weight: 400;
+            font-weight: 300;
         }
 
         .btn.btn-login {
