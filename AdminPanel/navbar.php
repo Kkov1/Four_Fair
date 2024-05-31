@@ -1,30 +1,25 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container">
-        <a href="../AdminPanel/index.php">
-            <img src="../resource/img/logo_fourdeals.png" alt="" style="width: 3rem;" class="mt-auto">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="../AdminPanel/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../AdminPanel/kategori.php">Kategori</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../AdminPanel/produk.php">Produk</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../AdminPanel/logout.php">Logout</a>
-                </li>
-            </ul>
-            <span class="navbar-text text-danger">
-                <?php echo $_SESSION['username']; ?>
-            </span>
-        </div>
+<?php
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+
+<nav class="sidebar">
+    <div class="menu-content">
+        <ul class="menu-items">
+            <a href="index.php" class="logo">
+                <img src="../resource/img/logofourdeals smk4.png" alt="" width="200" height="71">
+            </a>
+            <li class="item">
+                <a href="index.php" class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            </li>
+            <li class="item">
+                <a href="kategori.php" class="<?php echo ($current_page == 'kategori.php') ? 'active' : ''; ?>"><i class="bi bi-grid-1x2-fill"></i> Kategori</a>
+            </li>
+            <li class="item">
+                <a href="produk.php" class="<?php echo ($current_page == 'produk.php') ? 'active' : ''; ?>"><i class="bi bi-box-seam"></i> Produk</a>
+            </li>
+            <li class="item">
+                <a href="logout.php" class="<?php echo ($current_page == 'logout.php') ? 'active' : ''; ?>" style="color: #D31818;"><i class="bi bi-arrow-bar-left"></i> Logout</a>
+            </li>
+        </ul>
     </div>
 </nav>
