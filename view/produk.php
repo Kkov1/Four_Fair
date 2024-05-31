@@ -12,7 +12,6 @@ else if (isset($_GET['kategori'])) {
     $kategori_id = mysqli_fetch_array($queryGetKategoriId);
 
     $queryProduk = mysqli_query($conn, "SELECT * FROM produk WHERE kategori_id='" . $kategori_id['id'] . "'");
-
 }
 
 // mencari produk dengan default
@@ -91,14 +90,14 @@ $HitungData = mysqli_num_rows($queryProduk);
             <?php while ($produk = mysqli_fetch_array($queryProduk)) { ?>
                 <div class="col-md-3 mb-4">
                     <div class="card h-100">
-                        <a href="detail-produk.php">
-                            <div class="image_box">
+                        <a href="detail-produk.php?p=<?php echo $produk['id']; ?>">
+                            <div class=" image_box">
                                 <img src="../resource/img/<?php echo $produk['foto'] ?>" class="card-img-top"
                                     alt="Foto Produk">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $produk['nama']; ?></h5>
-                                <p class="card-price fw-bold">Rp. <?php echo number_format($produk['harga']); ?></p>
+                                <p class="card-price fw-bold">Rp <?php echo number_format($produk['harga']); ?></p>
                                 <p class="card-stok"><?php echo $produk['ketersediaan_stok'] ?></p>
                             </div>
                         </a>
