@@ -1,3 +1,11 @@
+<?php
+require "../config/connection.php";
+$id = $_GET['p'];
+$query_produk = mysqli_query($conn, "SELECT * FROM produk WHERE id = '" . mysqli_real_escape_string($conn, $id) . "'");
+$data = mysqli_fetch_array($query_produk);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +22,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
+        .harga {
+            font-size: 20px;
+            font-weight: bold;
 
+        }
     </style>
 </head>
 
@@ -22,6 +34,30 @@
     <?php require "navbar-user.php"; ?>
 
     <!-- Detail Produk -->
+    <div class="contariner-fluid py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 mb-5">
+                    <img src="../resource/img/<?php echo $data['foto'] ?>" class="img-fluid" alt="">
+                </div>
+                <div class="col-md-6 offset-lg-1">
+                    <h1><?php echo $data['nama']; ?></h1>
+                    <p class="fs-5"><?php echo $data['deskripsi']; ?> </p>
+                    <p class="harga">
+                        Rp <?php echo number_format($data['harga']); ?>
+                    </p>
+                    <p class="fs-5">
+                        status ketersediaan : <strong><?php echo $data['ketersediaan_stok']; ?></strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produk Terkait -->
+    <div class="container-fluid py-5">
+
+    </div>
 
 
 
