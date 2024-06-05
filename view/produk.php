@@ -3,15 +3,28 @@ require "../config/connection.php";
 
 // mencari produk berdasarkan keyword
 if (isset($_GET['keyword'])) {
-    $queryProduk = mysqli_query($conn, "SELECT * FROM produk WHERE nama LIKE '%" . $_GET['keyword'] . "%'");
+    $stmt = $conn->prepare("SELECT * FROM produk WHERE nama LIKE ?");
+    $likeKeyword = '%' . $_GET['keyword'] . '%';
+    $stmt->bind_param("s", $likeKeyword);
+    $stmt->execute();
+    $queryProduk = $stmt->get_result();
+    $stmt->close(); // Menutup statement setelah digunakan
 }
 
 // mencari produk berdasarkan kategori
 else if (isset($_GET['kategori'])) {
-    $queryGetKategoriId = mysqli_query($conn, "SELECT id FROM kategori WHERE nama='" . $_GET['kategori'] . "'");
-    $kategori_id = mysqli_fetch_array($queryGetKategoriId);
+    $stmt = $conn->prepare("SELECT id,nama FROM kategori WHERE nama=?");
+    $stmt->bind_param("s", $_GET['kategori']);
+    $stmt->execute();
+    $stmt->bind_result($kategori_id);
+    $stmt->fetch();
+    $stmt->close(); // Menutup statement setelah digunakan
 
-    $queryProduk = mysqli_query($conn, "SELECT * FROM produk WHERE kategori_id='" . $kategori_id['id'] . "'");
+    $stmt = $conn->prepare("SELECT * FROM produk WHERE kategori_id=?");
+    $stmt->bind_param("s", $kategori_id);
+    $stmt->execute();
+    $queryProduk = $stmt->get_result();
+    $stmt->close(); // Menutup statement setelah digunakan
 }
 
 // mencari produk dengan default
@@ -29,19 +42,16 @@ $HitungData = mysqli_num_rows($queryProduk);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Online | Produk</title>
+    <title>Four Deals | Produk</title>
     <link rel="stylesheet" href="../resource/css/main.css">
     <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
         }
+
 
         .card a {
             color: #000;
@@ -73,16 +83,16 @@ $HitungData = mysqli_num_rows($queryProduk);
 
 <body>
     <!-- Navbar -->
-    <?php require "navbar-user.php"; ?>
+    <?php require "./navbar-user.php"; ?>
 
     <div class="container">
-        <h2 class="text-center">Produk</h2>
+        <h2 class="text-center mb-5 mt-5">Produk</h2>
         <div class="row">
             <?php if ($HitungData < 1) {
                 // Jika Produk Tidak Tersedia 
-                ?>
+            ?>
                 <h6 class="text-center">Produk Tidak Tersedia</h6>
-                <?Php
+            <?Php
             }
             ?>
 
@@ -92,24 +102,27 @@ $HitungData = mysqli_num_rows($queryProduk);
                     <div class="card h-100">
                         <a href="detail-produk.php?p=<?php echo $produk['id']; ?>">
                             <div class=" image_box">
-                                <img src="../resource/img/<?php echo $produk['foto'] ?>" class="card-img-top"
-                                    alt="Foto Produk">
+                                <img src="../data/img-produk/<?php echo htmlspecialchars($produk['foto'], ENT_QUOTES, 'UTF-8') ?>" class="card-img-top" alt="Foto Produk">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $produk['nama']; ?></h5>
+                                <h5 class="card-title"><?php echo htmlspecialchars($produk['nama']); ?></h5>
                                 <p class="card-price fw-bold">Rp <?php echo number_format($produk['harga']); ?></p>
-                                <p class="card-stok"><?php echo $produk['ketersediaan_stok'] ?></p>
+                                <p class="card-stok"><?php echo "Stok ";
+                                                        echo htmlspecialchars($produk['stok']); ?></p>
                             </div>
                         </a>
+
                     </div>
                 </div>
             <?php } ?>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <!-- Footer -->
+    <?php require "footer.php"; ?>
+
+    <script src="../node_modules/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

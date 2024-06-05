@@ -128,8 +128,11 @@ $queryKategori = mysqli_query($conn, "SELECT * FROM kategori");
                     if (isset($_POST['simpan'])) {
                         $kategori = htmlspecialchars($_POST['kategori']);
 
-                        $namasama = mysqli_query($conn, "SELECT nama FROM kategori WHERE nama = '$kategori'");
-                        $jumlahkategoribaru = mysqli_num_rows($namasama);
+                        $stmt = $conn->prepare("SELECT nama FROM kategori WHERE nama = ?");
+                        $stmt->bind_param("s", $kategori);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $jumlahkategoribaru = $result->num_rows;
 
                         if ($jumlahkategoribaru > 0) {
                     ?>
@@ -177,8 +180,11 @@ $queryKategori = mysqli_query($conn, "SELECT * FROM kategori");
                             if (isset($_POST['simpan'])) {
                                 $kategori = htmlspecialchars($_POST['kategori']);
 
-                                $namasama = mysqli_query($conn, "SELECT nama FROM kategori WHERE nama = '$kategori'");
-                                $jumlahkategoribaru = mysqli_num_rows($namasama);
+                                $stmt = $conn->prepare("SELECT nama FROM kategori WHERE nama = ?");
+                                $stmt->bind_param("s", $kategori);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $jumlahkategoribaru = $result->num_rows;
 
                                 if ($jumlahkategoribaru > 0) {
                             ?>

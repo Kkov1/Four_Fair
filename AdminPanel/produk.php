@@ -139,7 +139,8 @@ $jumlahproduk = mysqli_num_rows($query);
                                     <th>Nama</th>
                                     <th>Kategori</th>
                                     <th>Harga</th>
-                                    <th>Ketersediaan stok</th>
+                                    <th>Stok</th>
+                                    <th>Foto</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -148,7 +149,7 @@ $jumlahproduk = mysqli_num_rows($query);
                                 if ($jumlahproduk == 0) {
                                 ?>
                                     <tr>
-                                        <td colspan="6" class="text-center">Produk tidak tersedia</td>
+                                        <td colspan="7" class="text-center">Produk tidak tersedia</td>
                                     </tr>
                                     <?php
                                 } else {
@@ -157,10 +158,11 @@ $jumlahproduk = mysqli_num_rows($query);
                                     ?>
                                         <tr>
                                             <td><?php echo $jumlah; ?></td>
-                                            <td><?php echo $data['nama']; ?></td>
-                                            <td><?php echo $data['nama_kategori']; ?></td>
-                                            <td><?php echo $data['harga']; ?></td>
-                                            <td><?php echo $data['ketersediaan_stok']; ?></td>
+                                            <td><?php echo htmlspecialchars($data['nama'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            <td><?php echo htmlspecialchars($data['nama_kategori'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            <td><?php echo htmlspecialchars($data['harga'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            <td><?php echo htmlspecialchars($data['stok'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            <td><img src="../data/img-produk/<?php echo htmlspecialchars($data['foto'], ENT_QUOTES, 'UTF-8'); ?>" alt="Foto Produk" style="width: 100px; height: auto;"></td>
                                             <td>
                                                 <a href="produk-edit.php?p=<?php echo $data['id']; ?>" class="btn btn-warning">
                                                     <i class="bi bi-pencil-square"></i>

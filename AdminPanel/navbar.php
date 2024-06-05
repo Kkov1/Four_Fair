@@ -18,6 +18,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="produk.php" class="<?php echo ($current_page == 'produk.php') ? 'active' : ''; ?>"><i class="bi bi-box-seam"></i> Produk</a>
             </li>
             <li class="item">
+                <a href="iklan.php" class="<?php echo ($current_page == 'iklan.php') ? 'active' : ''; ?>"><i class="bi bi-image"></i> Iklan</a>
+            </li>
+            <li class="item">
                 <a href="logout.php" class="<?php echo ($current_page == 'logout.php') ? 'active' : ''; ?>" style="color: #D31818;"><i class="bi bi-arrow-bar-left"></i> Logout</a>
             </li>
         </ul>

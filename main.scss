@@ -1,4 +1,5 @@
-$danger: #db34eb;
+$theme-colors: (
+  "info": #f1a23a,
+);
 
 @import "./node_modules/bootstrap/scss/bootstrap.scss";
-@import "./node_modules/bootstrap-icons/font/bootstrap-icons.scss";

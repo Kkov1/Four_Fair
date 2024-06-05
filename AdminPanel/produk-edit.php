@@ -3,8 +3,11 @@ require "session.php";
 require "../config/connection.php";
 $id = $_GET['p'];
 
-$query = mysqli_query($conn, "SELECT a.*, b.nama AS nama_kategori FROM produk a JOIN kategori b ON a.kategori_id=b.id WHERE a.id = '" . mysqli_real_escape_string($conn, $id) . "'");
-$data = mysqli_fetch_array($query);
+$stmt = $conn->prepare("SELECT a.*, b.nama AS nama_kategori FROM produk a JOIN kategori b ON a.kategori_id=b.id WHERE a.id = ?");
+$stmt->bind_param("s", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
 
 $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id!='$data[kategori_id]'");
 
@@ -143,7 +146,7 @@ function generateRandomString($length = 10)
                     <form action="" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama</label>
-                            <input type="text" name="nama" value="<?Php echo $data['nama'] ?>" id="nama" class="form-control">
+                            <input type="text" name="nama" value="<?php echo htmlspecialchars($data['nama']); ?>" id="nama" class="form-control">
                         </div>
 
                         <div class="mb-3">
@@ -163,7 +166,7 @@ function generateRandomString($length = 10)
                         <div class="mb-3">
                             <label for="CurrentFoto">Foto Produk Sekarang</label>
                             <br>
-                            <img src="../resource/img/<?php echo $data['foto'] ?>" alt="Foto sekarang" width="300px">
+                            <img src="../data/img-produk/<?php echo htmlspecialchars($data['foto']); ?>" alt="Foto sekarang" width="300px">
                         </div>
 
                         <div class="mb-3">
@@ -177,17 +180,12 @@ function generateRandomString($length = 10)
                         </div>
 
                         <div class="mb-3">
-                            <label for="ketersediaan_stok" class="form-label">Ketersediaan Stok</label>
-                            <select name="ketersediaan_stok" id="ketersediaan_stok" class="form-control">
-                                <option value="tersedia" <?php if ($data['ketersediaan_stok'] == 'tersedia')
-                                                                echo 'selected'; ?>>Tersedia</option>
-                                <option value="Habis" <?php if ($data['ketersediaan_stok'] == 'Habis')
-                                                            echo 'selected'; ?>>Habis</option>
-                            </select>
+                            <label for="stok" class="form-label">Stok</label>
+                            <input type="number" name="stok" id="stok" class="form-control" value="<?php echo $data['stok']; ?>" min="0">
                         </div>
                         <div class="mt-3 d-flex justify-content-center ">
                             <button class="btn btn-primary button-spacing" type="submit" name="edit">Edit</button>
-                            <button class="btn btn-warning button-spacing" type="submit" name="delete" id="deleteButton">Delete</button>
+                            <button class="btn btn-danger button-spacing text-white" type="submit" name="delete" id="deleteButton">Delete</button>
                         </div>
                         <?php
                         if (isset($_POST['edit'])) {
@@ -195,9 +193,9 @@ function generateRandomString($length = 10)
                             $kategori_id = htmlspecialchars($_POST['kategori_id']);
                             $harga = htmlspecialchars($_POST['harga']);
                             $deskripsi = htmlspecialchars($_POST['deskripsi']);
-                            $stok = htmlspecialchars($_POST['ketersediaan_stok']);
+                            $stok = htmlspecialchars($_POST['stok']);
 
-                            $target_dir = "../resource/img/";
+                            $target_dir = "../data/img-produk/";
                             $nama_file = basename($_FILES["foto"]["name"]);
                             $target_file = $target_dir . $nama_file;
                             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -205,14 +203,17 @@ function generateRandomString($length = 10)
                             $random_name = generateRandomString(20);
                             $new_name = $random_name . "." . $imageFileType;
 
-                            if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '') {
+                            if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '' || $stok == '') {
                         ?>
                                 <div class="alert alert-warning mt-3" role="alert">
-                                    Nama, Kategori, Harga, dan Deskripsi Wajib diisi!
+                                    Nama, Kategori, Harga, Deskripsi, dan Stok Wajib diisi!
                                 </div>
                                 <?php
+
                             } else {
-                                $queryUpdateProduk = mysqli_query($conn, "UPDATE produk SET kategori_id='$kategori_id', nama='$nama', harga='$harga', deskripsi='$deskripsi', ketersediaan_stok='$stok' WHERE id='$id' ");
+                                $stmt = $conn->prepare("UPDATE produk SET kategori_id=?, nama=?, harga=?, deskripsi=?, stok=? WHERE id=?");
+                                $stmt->bind_param("sssssi", $kategori_id, $nama, $harga, $deskripsi, $stok, $id);
+                                $stmt->execute();
 
                                 if ($nama_file != '') {
                                     if ($image_size >= 700000) {
@@ -232,15 +233,17 @@ function generateRandomString($length = 10)
                                         } else {
                                             move_uploaded_file($_FILES["foto"]["tmp_name"], $target_dir . $new_name);
 
-                                            $queryUpdateFoto = mysqli_query($conn, "UPDATE produk SET foto='$new_name' WHERE id='id' ");
+                                            $stmt = $conn->prepare("UPDATE produk SET foto=? WHERE id=?");
+                                            $stmt->bind_param("si", $new_name, $id);
+                                            $stmt->execute();
 
-                                            if ($queryUpdateFoto) {
+                                            if ($stmt) {
                                             ?>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     Data Berhasil Disimpan
                                                 </div>
                                                 <meta http-equiv="refresh" content="1; url=produk.php" />
-                                <?php
+                        <?php
 
                                             } else {
                                                 echo mysqli_error($conn);
@@ -251,25 +254,27 @@ function generateRandomString($length = 10)
                             }
                         }
                         if (isset($_POST['delete'])) {
+                            // Mengambil nama file dari database
+                            $query = $conn->prepare("SELECT foto FROM produk WHERE id = ?");
+                            $query->bind_param("i", $id);
+                            $query->execute();
+                            $result = $query->get_result();
+                            $row = $result->fetch_assoc();
+                            $filename = $row['foto'];
+
+                            // Menghapus file gambar dari direktori
+                            if (file_exists("../data/img-produk/" . $filename)) {
+                                unlink("../data/img-produk/" . $filename);
+                            }
+
+                            // Menghapus data dari database
                             $hapus = mysqli_query($conn, "DELETE FROM produk WHERE id='$id'");
                             if ($hapus) {
-                                ?>
-
-                                <div class="alert alert-primary mt-3" role="alert">
-                                    Data Berhasil Dihapus
-                                </div>
-                                <meta http-equiv="refresh" content="1; url=produk.php" />
-                            <?php
-
+                                echo '<div class="alert alert-primary mt-3" role="alert">Data dan gambar berhasil dihapus</div>';
+                                echo '<meta http-equiv="refresh" content="1; url=produk.php" />';
                             } else {
-                            ?>
-                                <div class="alert alert-warning mt-3" role="alert">
-                                    <?php
-                                    echo mysqli_error($conn);
-                                    ?>
-                                </div>
-                                <meta http-equiv="refresh" content="1; url=produk.php" />
-                        <?php
+                                echo '<div class="alert alert-warning mt-3" role="alert">' . mysqli_error($conn) . '</div>';
+                                echo '<meta http-equiv="refresh" content="1; url=produk.php" />';
                             }
                         }
                         ?>
@@ -305,6 +310,15 @@ function generateRandomString($length = 10)
                 }
             });
         }
+    </script>
+    <script>
+        document.getElementById('nama').addEventListener('input', function(e) {
+            var value = e.target.value;
+            if (/[^a-zA-Z0-9 ]/.test(value)) {
+                alert('Hanya karakter alfanumerik yang diperbolehkan.');
+                e.target.value = value.replace(/[^a-zA-Z0-9 ]/g, '');
+            }
+        });
     </script>
 </body>
 

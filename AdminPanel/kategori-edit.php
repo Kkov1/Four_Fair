@@ -25,9 +25,11 @@ if (isset($_POST['edit'])) {
             </div>
             <?php
         } else {
-            $update = mysqli_query($conn, "UPDATE kategori SET nama= '$kategori'  WHERE id='$id' ");
+            $stmt = $conn->prepare("UPDATE kategori SET nama= ? WHERE id= ?");
+            $stmt->bind_param("si", $kategori, $id);
+            $stmt->execute();
 
-            if ($update) {
+            if ($stmt) {
             ?>
                 <div class="alert alert-primary mt-3" role="alert">
                     Data Berhasil Disimpan
@@ -185,7 +187,7 @@ if (isset($_POST['delete'])) {
             <form action="" id="formTarget" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="kategori" class="form-label">Kategori</label>
-                    <input type="text" id="kategori" name="kategori" class="form-control" value="<?php echo $data['nama']; ?>">
+                    <input type="text" id="kategori" name="kategori" class="form-control" value="<?php echo htmlspecialchars($data['nama']); ?>">
                 </div>
                 <div class="mt-3 d-flex justify-content-between">
                     <button class="btn btn-primary" type="submit" name="edit">Edit</button>

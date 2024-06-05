@@ -149,9 +149,10 @@ function generateRandomString($length = 10)
                             </div>
                             <div class="mb-3">
                                 <label for="harga" class="form-label">Harga</label>
-                                <input type="number" name="harga" id="harga" class="form-control">
+                                <input type="number" name="harga" id="harga" class="form-control" min="0">
                             </div>
                             <div class="mb-3">
+
                                 <label for="foto" class="form-label">Foto</label>
                                 <input type="file" name="foto" id="foto" class="form-control">
                             </div>
@@ -160,11 +161,8 @@ function generateRandomString($length = 10)
                                 <textarea name="deskripsi" id="deskripsi" cols="30" rows="10" class="form-control"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="ketersediaan_stok" class="form-label">Ketersediaan Stok</label>
-                                <select name="ketersediaan_stok" id="ketersediaan_stok" class="form-control">
-                                    <option value="tersedia">Tersedia</option>
-                                    <option value="habis">Habis</option>
-                                </select>
+                                <label for="stok" class="form-label">Stok</label>
+                                <input type="number" name="stok" id="stok" class="form-control" min="0">
                             </div>
                             <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
                             <?php
@@ -173,14 +171,16 @@ function generateRandomString($length = 10)
                                 $kategori_id = htmlspecialchars($_POST['kategori_id']);
                                 $harga = htmlspecialchars($_POST['harga']);
                                 $deskripsi = htmlspecialchars($_POST['deskripsi']);
-                                $stok = htmlspecialchars($_POST['ketersediaan_stok']);
+                                $stok = htmlspecialchars($_POST['stok']);
 
-                                if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '') {
+                                if ($nama == '' || $kategori_id == '' || $harga == '' || $deskripsi == '' || $stok == '') {
                             ?>
                                     <div class="alert alert-warning mt-3" role="alert">
-                                        Nama, Kategori, Harga, dan Deskripsi Wajib diisi!
+
+                                        Nama, Kategori, Harga, Deskripsi, dan Stok Wajib diisi!
                                     </div>
                                     <?php
+
                                 } else {
                                     if ($_FILES["foto"]["name"] == "") {
                                     ?>
@@ -189,7 +189,7 @@ function generateRandomString($length = 10)
                                         </div>
                                         <?php
                                     } else {
-                                        $target_dir = "../resource/img/";
+                                        $target_dir = "../data/img-produk/";
                                         $nama_file = basename($_FILES["foto"]["name"]);
                                         $target_file = $target_dir . $nama_file;
                                         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -212,9 +212,12 @@ function generateRandomString($length = 10)
                                         } else {
                                             move_uploaded_file($_FILES["foto"]["tmp_name"], $target_dir . $new_name);
 
-                                            $tambah_produk = mysqli_query($conn, "INSERT INTO produk (kategori_id, nama, harga, foto, deskripsi, ketersediaan_stok) VALUES ('$kategori_id', '$nama', '$harga', '$new_name', '$deskripsi', '$stok')");
+                                            // Prepared statement untuk mencegah SQL Injection
+                                            $stmt = $conn->prepare("INSERT INTO produk (kategori_id, nama, harga, foto, deskripsi, stok) VALUES (?, ?, ?, ?, ?, ?)");
+                                            $stmt->bind_param("ssssss", $kategori_id, $nama, $harga, $new_name, $deskripsi, $stok);
+                                            $stmt->execute();
 
-                                            if ($tambah_produk) {
+                                            if ($stmt->affected_rows > 0) {
                                             ?>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     Data Berhasil Disimpan
@@ -224,6 +227,7 @@ function generateRandomString($length = 10)
                                             } else {
                                                 echo mysqli_error($conn);
                                             }
+                                            $stmt->close();
                                         }
                                     }
                                 }

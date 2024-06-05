@@ -31,9 +31,12 @@ require "../config/connection.php";
             if (isset($_POST['login-btn'])) {
                 $username = htmlspecialchars($_POST['username']);
                 $password = htmlspecialchars($_POST['password']);
-                $query = mysqli_query($conn, "SELECT * FROM  users WHERE username ='$username'");
-                $resultD = mysqli_num_rows($query);
-                $data = mysqli_fetch_array($query);
+                $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+                $stmt->bind_param("s", $username);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $resultD = $result->num_rows;
+                $data = $result->fetch_assoc();
                 if ($resultD > 0) {
                     if (password_verify($password, $data['password'])) {
                         $_SESSION['username'] = $data['username'];

@@ -13,8 +13,11 @@ $queryjumlahkategori = mysqli_num_rows($queryKategori);
 $id = isset($_GET['p']) ? $_GET['p'] : null;
 
 if ($id !== null) {
-    $query = mysqli_query($conn, "SELECT * FROM kategori WHERE id = '" . mysqli_real_escape_string($conn, $id) . "'");
-    $data = mysqli_fetch_array($query);
+    $stmt = $conn->prepare("SELECT * FROM kategori WHERE id = ?");
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
 
     if (isset($_POST['edit'])) {
         $kategori = htmlspecialchars($_POST['kategori']);
@@ -235,7 +238,7 @@ if ($id !== null && isset($_POST['delete'])) {
                                 ?>
                                     <tr>
                                         <td><?php echo $number; ?></td>
-                                        <td><?php echo $data['nama']; ?></td>
+                                        <td><?php echo htmlspecialchars($data['nama']); ?></td>
                                         <td>
                                             <a href="kategori.php?p=<?php echo $data['id']; ?>" class="btn btn-warning">
                                                 <i class="bi bi-pencil-square"></i>
@@ -311,8 +314,11 @@ if ($id !== null && isset($_POST['delete'])) {
     <?php if (isset($id)) : ?>
         <?php
 
-        $query = mysqli_query($conn, "SELECT * FROM kategori WHERE id = '" . mysqli_real_escape_string($conn, $id) . "'");
-        $data = mysqli_fetch_array($query);
+        $stmt = $conn->prepare("SELECT * FROM kategori WHERE id = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
 
         if (isset($_POST['edit'])) {
             // apabila button edit dipencet
@@ -361,7 +367,7 @@ if ($id !== null && isset($_POST['delete'])) {
                         <form action="" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="kategori" class="form-label">Kategori</label>
-                                <input type="text" id="kategori" name="kategori" class="form-control" value="<?php echo $data['nama']; ?>">
+                                <input type="text" id="kategori" name="kategori" class="form-control" value="<?php echo htmlspecialchars($data['nama']); ?>">
                             </div>
                             <div class="mt-3 d-flex justify-content-between">
                                 <button class="btn btn-primary" type="submit" name="edit">Edit</button>
