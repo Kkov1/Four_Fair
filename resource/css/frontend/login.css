@@ -1,98 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-        body {
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: poppins;
-        }
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
 
-        .card {
-            width: 600px;
-            height: 500px;
-            padding: 2rem;
-            border-radius: 10px;
-            position: fixed;
-        }
+.card {
+  width: 600px;
+  height: 500px;
+  padding: 2rem;
+  border-radius: 10px;
+  position: fixed;
+}
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+.form-group {
+  margin-bottom: 1.5rem;
+}
 
-        form h2{
-            font-weight: 700;
-            font-size: 48px;
-        }
+form h2 {
+  font-weight: 700;
+  font-size: 48px;
+}
 
-        .circle {
-            width: 1351px;
-            height: 1351px;
-            background-color: #FF9E00;
-            border-radius: 50%;
-            position: fixed;
-            top: 500px;
-            left: 800px;
-            z-index: -1;
-        }
+.circle {
+  width: 1351px;
+  height: 1351px;
+  background-color: #ff9e00;
+  border-radius: 50%;
+  position: fixed;
+  top: 500px;
+  left: 800px;
+  z-index: -1;
+}
 
-        .circle2 {
-            width: 1351px;
-            height: 1351px;
-            background-color: #FF9E00;
-            border-radius: 50%;
-            position: fixed;
-            top: -981px;
-            left: -689px;
-            z-index: -1;
-        }
+.circle2 {
+  width: 1351px;
+  height: 1351px;
+  background-color: #ff9e00;
+  border-radius: 50%;
+  position: fixed;
+  top: -981px;
+  left: -689px;
+  z-index: -1;
+}
 
-        img {
-            position: fixed;
-            bottom: 0;
-            left: 20px; 
-        }
+img {
+  position: fixed;
+  bottom: 0;
+  left: 20px;
+}
 
-        .Logo{
-            position: fixed;
-            top: 0;
-            left: 1135px;
-        }
+.Logo {
+  position: fixed;
+  top: 0;
+  left: 1135px;
+}
 
-        .form-control {
-            width: 530px;
-            height: 53px;
-            background-color: #D9D9D9;
-        }
+.form-control {
+  width: 530px;
+  height: 53px;
+  background-color: #d9d9d9;
+}
 
-        ::placeholder,a {
-            color: #3B3B3B;
-        }
-    
-        .btn.btn-login{
-            background-color: #FF9E00;
-            width: 273px;
-            height: 54px;
-            border-radius: 50px;
-            font-weight: 400;
-            font-size: 25px;
-            margin-top: 20px;
-        }
+::placeholder,
+a {
+  color: #3b3b3b;
+}
 
-        .btn.btn-login:hover{
-            background-color: #FF9E00;
-            border: none;
-        }
+.btn.btn-login {
+  background-color: #ff9e00;
+  width: 273px;
+  height: 54px;
+  border-radius: 50px;
+  font-weight: 400;
+  font-size: 25px;
+  margin-top: 20px;
+}
 
-        .account{
-            color: #3B3B3B;
-            font-weight: 400;
-            font-size: 20px;
-        }
-        .SignUp {
-            color: #50BFE2;
-            font-weight: 400;
-            font-size: 20px;
-        }
+.btn.btn-login:hover {
+  background-color: #ff9e00;
+  border: none;
+}
+
+.account {
+  color: #3b3b3b;
+  font-weight: 400;
+  font-size: 20px;
+}
+.SignUp {
+  color: #50bfe2;
+  font-weight: 400;
+  font-size: 20px;
+}

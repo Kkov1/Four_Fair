@@ -215,6 +215,13 @@ function generateRandomString($length = 10)
                                 $stmt->bind_param("sssssi", $kategori_id, $nama, $harga, $deskripsi, $stok, $id);
                                 $stmt->execute();
 
+                                if ($stmt->execute()) {
+                                    echo '<div class="alert alert-primary mt-3" role="alert">Data berhasil diupdate</div>';
+                                    echo '<meta http-equiv="refresh" content="1; url=produk.php" />';
+                                } else {
+                                    echo '<div class="alert alert-warning mt-3" role="alert">' . $stmt->error . '</div>';
+                                }
+
                                 if ($nama_file != '') {
                                     if ($image_size >= 700000) {
                                 ?>

@@ -1,6 +1,6 @@
 <?php
 require "../config/connection.php";
-require "./session.php";
+require "../auth/auth.php";
 
 // mencari produk berdasarkan keyword
 if (isset($_GET['keyword'])) {
@@ -147,7 +147,8 @@ $HitungData = mysqli_num_rows($queryProduk);
             $result = mysqli_query($conn, $query);
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<div class="col-md-2">';
-                echo '<a class="btn btn-info w-100 text-white" href="./produk.php?produk=' . $row['nama'] . '">' . $row['nama'] . '</a>';
+                // Perhatikan perubahan di sini dari produk menjadi kategori
+                echo '<a class="btn btn-info w-100 text-white" href="./produk.php?kategori=' . $row['nama'] . '">' . $row['nama'] . '</a>';
                 echo '</div>';
             }
             ?>

@@ -1,10 +1,11 @@
 <?php
 require "../config/connection.php";
-require "./session.php";
+require "../auth/auth.php";
+
 
 
 $id = $_GET['p'];
-$stmt = $conn->prepare("SELECT * FROM produk WHERE id = ?");
+$stmt = $conn->prepare("SELECT produk.*, kategori.nama AS nama_kategori FROM produk LEFT JOIN kategori ON produk.kategori_id = kategori.id WHERE produk.id = ?");
 $stmt->bind_param("s", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -110,9 +111,11 @@ $HitungData = mysqli_num_rows($queryProduk);
                     <h1><?php echo htmlspecialchars($data['nama']); ?></h1>
                     <p class="harga">Rp <?php echo htmlspecialchars(number_format($data['harga'])); ?></p>
                     <p class="fs-5">Stok Tersedia : <strong><?php echo htmlspecialchars($data['stok']); ?></strong></p>
+                    <p class="fs-6">Kategori : <strong><?php echo isset($data['nama_kategori']) ? htmlspecialchars($data['nama_kategori']) : 'Kategori tidak tersedia'; ?></strong></p>
                     <p class="fs-6 deksripsi"><?php echo htmlspecialchars($data['deskripsi']); ?></p>
                 </div>
                 <div class="col-md-3 ">
+
                     <div class="card keranjang" style="width: 18rem; position: sticky; top: 50px;">
                         <div class="card-body">
                             <h5 class="card-title">Atur jumlah</h5>
@@ -128,37 +131,37 @@ $HitungData = mysqli_num_rows($queryProduk);
                             </div>
                             <p class="f-size">Stok Tersedia : <?php echo htmlspecialchars($data['stok']); ?></p>
                             <p class="mt-2 f-size">Subtotal : Rp <span id="subtotal"><?php echo htmlspecialchars($data['harga']); ?></span></p>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-info text-white" style="font-size: 70%;" onclick="window.location.href='./keranjang.php';">Masukkan Keranjang</button>
-                                <button class="btn btn-info text-white" style="font-size: 70%;" onclick="window.location.href='./keranjang.php';">Beli Langsung</button>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-info text-white" style="font-size: 80%;" onclick="window.location.href='./keranjang.php'">Beli Langsung</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <h2 class="text-center mb-5 mt-5">Produk Yang Lain Mungkin Sesuai Dengan Anda</h2>
-            <div class="row">
-                <?php if ($HitungData < 1) { ?>
-                    <h6 class="text-center">Produk Tidak Tersedia</h6>
-                <?php } ?>
-                <?php while ($produk = mysqli_fetch_array($queryProduk)) { ?>
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100">
-                            <a href="detail-produk.php?p=<?php echo $produk['id']; ?>">
-                                <div class="image_box">
-                                    <img src="../data/img-produk/<?php echo htmlspecialchars($produk['foto'], ENT_QUOTES, 'UTF-8') ?>" class="card-img-top" alt="Foto Produk">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><?php echo htmlspecialchars($produk['nama']); ?></h5>
-                                    <p class="card-price fw-bold">Rp <?php echo number_format($produk['harga']); ?></p>
-                                    <p class="card-stok"><?php echo "Stok " . htmlspecialchars($produk['stok']); ?></p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
         </div>
+        <h2 class=" text-center mb-5 mt-5 ">Produk Yang Lain Mungkin Sesuai Dengan Anda</h2>
+        <div class=" row">
+            <?php if ($HitungData < 1) { ?>
+                <h6 class="text-center">Produk Tidak Tersedia</h6>
+            <?php } ?>
+            <?php while ($produk = mysqli_fetch_array($queryProduk)) { ?>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <a href="detail-produk.php?p=<?php echo $produk['id']; ?>">
+                            <div class="image_box">
+                                <img src="../data/img-produk/<?php echo htmlspecialchars($produk['foto'], ENT_QUOTES, 'UTF-8') ?>" class="card-img-top" alt="Foto Produk">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo htmlspecialchars($produk['nama']); ?></h5>
+                                <p class="card-price fw-bold">Rp <?php echo number_format($produk['harga']); ?></p>
+                                <p class="card-stok"><?php echo "Stok " . htmlspecialchars($produk['stok']); ?></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
     </div>
 
     <!-- Footer -->
@@ -192,6 +195,19 @@ $HitungData = mysqli_num_rows($queryProduk);
             }
         }
     </script>
+    <script>
+        function sendMessageToWhatsapp() {
+            var nama = "<?php echo htmlspecialchars($user['nama']); ?>"; // Asumsi $user['nama'] tersedia dari session atau database
+            var jumlah = document.getElementById('jumlahInput').value;
+            var harga = <?php echo $data['harga']; ?>;
+            var totalHarga = harga * jumlah;
+            var namaProduk = "<?php echo htmlspecialchars($data['nama']); ?>";
+
+            var urlToWhatsapp = `https://wa.me/6285711141021?text=Halo, nama saya ${nama}, saya ingin membeli ${jumlah} produk ${namaProduk} dengan harga Rp ${totalHarga.toLocaleString()}`;
+            window.open(urlToWhatsapp, "_blank");
+        }
+    </script>
+
 </body>
 
 </html>

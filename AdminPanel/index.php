@@ -7,6 +7,9 @@ $jumlahKategori = mysqli_num_rows($queryKategori);
 
 $queryProduk = mysqli_query($conn, "SELECT * FROM produk");
 $jumlahProduk = mysqli_num_rows($queryProduk);
+
+$queryIklan = mysqli_query($conn, "SELECT * FROM iklan");
+$jumlahIklan = mysqli_num_rows($queryIklan);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -191,23 +194,9 @@ $jumlahProduk = mysqli_num_rows($queryProduk);
                     <a href="../AdminPanel/produk.php" class="card-link"></a>
                     <div class="summary-kategori" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                         <div class="p-3">
-                            <h6 class="total-kategori-text">Total Produk</h6>
+                            <h6 class="total-kategori-text">Total Iklan</h6>
                             <div class="col fs-3 jumlah-kategori-text">
-                                <?php echo $jumlahProduk ?>
-                            </div>
-                            <div class="cardProduk">
-                                <i class="bi bi-cart3 font-large-2 iconProduk"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <a href="../AdminPanel/produk.php" class="card-link"></a>
-                    <div class="summary-kategori" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <div class="p-3">
-                            <h6 class="total-kategori-text">Total Produk</h6>
-                            <div class="col fs-3 jumlah-kategori-text">
-                                <?php echo $jumlahProduk ?>
+                                <?php echo $jumlahIklan ?>
                             </div>
                             <div class="cardProduk">
                                 <i class="bi bi-cart3 font-large-2 iconProduk"></i>
@@ -216,7 +205,7 @@ $jumlahProduk = mysqli_num_rows($queryProduk);
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-8">
+                <div class="col-12 col-lg-12">
                     <div class="card border-0" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                         <div class="filter">
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -236,16 +225,21 @@ $jumlahProduk = mysqli_num_rows($queryProduk);
 
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
+                                    // Data dari PHP
+                                    var jumlahKategori = <?php echo $jumlahKategori; ?>;
+                                    var jumlahProduk = <?php echo $jumlahProduk; ?>;
+                                    var jumlahIklan = <?php echo $jumlahIklan; ?>;
+
                                     new ApexCharts(document.querySelector("#reportsChart"), {
                                         series: [{
-                                            name: 'Sales',
-                                            data: [31, 40, 28, 51, 42, 82, 56],
+                                            name: 'Kategori',
+                                            data: [jumlahKategori, jumlahKategori, jumlahKategori, jumlahKategori, jumlahKategori, jumlahKategori, jumlahKategori],
                                         }, {
-                                            name: 'Revenue',
-                                            data: [11, 32, 45, 32, 34, 52, 41]
+                                            name: 'Produk',
+                                            data: [jumlahProduk, jumlahProduk, jumlahProduk, jumlahProduk, jumlahProduk, jumlahProduk, jumlahProduk]
                                         }, {
-                                            name: 'Customers',
-                                            data: [15, 11, 32, 18, 9, 24, 11]
+                                            name: 'Iklan',
+                                            data: [jumlahIklan, jumlahIklan, jumlahIklan, jumlahIklan, jumlahIklan, jumlahIklan, jumlahIklan]
                                         }],
                                         chart: {
                                             height: 350,

@@ -184,7 +184,7 @@ $HitungData = mysqli_num_rows($queryProduk);
                 </div>
             <?php } ?>
         </div>
-    </div>
+    </div>z
 
     <!-- Footer -->
     <?php require "./view/footer.php"; ?>

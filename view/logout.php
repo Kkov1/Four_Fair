@@ -1,5 +1,6 @@
 <?php
 session_start();
-session_unset();
-session_destroy();
-header('location:  ../index.php');
+unset($_SESSION['auth']);
+unset($_SESSION['auth_user']);
+$_SESSION['status'] = "You are logged out";
+header("Location: ../login.php");

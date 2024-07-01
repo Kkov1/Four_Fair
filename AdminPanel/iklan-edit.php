@@ -190,9 +190,20 @@ function generateRandomString($length = 10)
                                     $stmt->bind_param("sss", $nama, $deskripsi, $id);
                                     $stmt->execute();
 
+                                    if ($stmt->execute()) {
+                                    ?>
+                                        <div class="alert alert-primary mt-3" role="alert">
+                                            Data Berhasil Disimpan
+                                        </div>
+                                        <meta http-equiv="refresh" content="0; url=iklan.php" />
+                                        <?php
+                                    } else {
+                                        echo "Error: " . $stmt->error;
+                                    }
+
                                     if ($nama_file != '') {
                                         if ($image_size >= 700000) {
-                                    ?>
+                                        ?>
                                             <div class="alert alert-warning mt-3" role="alert">
                                                 Ukuran file tidak boleh lebih dari 700KB!
                                             </div>
@@ -212,16 +223,16 @@ function generateRandomString($length = 10)
                                                 $stmt->bind_param("si", $new_name, $id);
                                                 $stmt->execute();
 
-                                                if ($stmt) {
+                                                if ($stmt->execute()) {
                                                 ?>
                                                     <div class="alert alert-primary mt-3" role="alert">
                                                         Data Berhasil Disimpan
                                                     </div>
-                                                    <meta http-equiv="refresh" content="1; url=iklan.php" />
+                                                    <meta http-equiv="refresh" content="0; url=iklan.php" />
                             <?php
 
                                                 } else {
-                                                    echo mysqli_error($conn);
+                                                    echo "Error: " . $stmt->error;
                                                 }
                                             }
                                         }

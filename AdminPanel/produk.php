@@ -2,7 +2,7 @@
 require "session.php";
 require "../config/connection.php";
 
-$query = mysqli_query($conn, "SELECT a.*, b.nama AS nama_kategori FROM produk a JOIN kategori b ON a.kategori_id=b.id");
+$query = mysqli_query($conn, "SELECT * FROM news");
 $jumlahproduk = mysqli_num_rows($query);
 ?>
 <!DOCTYPE html>

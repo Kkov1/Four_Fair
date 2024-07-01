@@ -10,7 +10,7 @@ require "../config/connection.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Admin</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="../resource/css/frontend/login.css">
     <style>
@@ -31,7 +31,7 @@ require "../config/connection.php";
             if (isset($_POST['login-btn'])) {
                 $username = htmlspecialchars($_POST['username']);
                 $password = htmlspecialchars($_POST['password']);
-                $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+                $stmt = $conn->prepare("SELECT * FROM log_admin  WHERE username = ?");
                 $stmt->bind_param("s", $username);
                 $stmt->execute();
                 $result = $stmt->get_result();

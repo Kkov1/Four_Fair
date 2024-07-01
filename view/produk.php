@@ -13,18 +13,28 @@ if (isset($_GET['keyword'])) {
 
 // mencari produk berdasarkan kategori
 else if (isset($_GET['kategori'])) {
-    $stmt = $conn->prepare("SELECT id,nama FROM kategori WHERE nama=?");
+    $stmt = $conn->prepare("SELECT id FROM kategori WHERE nama=?");
     $stmt->bind_param("s", $_GET['kategori']);
     $stmt->execute();
-    $stmt->bind_result($kategori_id);
-    $stmt->fetch();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $kategori_id = $row['id'];
+    } else {
+        $kategori_id = null;
+    }
     $stmt->close(); // Menutup statement setelah digunakan
 
-    $stmt = $conn->prepare("SELECT * FROM produk WHERE kategori_id=?");
-    $stmt->bind_param("s", $kategori_id);
-    $stmt->execute();
-    $queryProduk = $stmt->get_result();
-    $stmt->close(); // Menutup statement setelah digunakan
+    if ($kategori_id) {
+        $stmt = $conn->prepare("SELECT * FROM produk WHERE kategori_id=?");
+        $stmt->bind_param("i", $kategori_id); // Pastikan tipe data sesuai dengan kolom di database
+        $stmt->execute();
+        $queryProduk = $stmt->get_result();
+        $stmt->close(); // Menutup statement setelah digunakan
+    } else {
+        // Tidak ada kategori yang cocok, bisa menampilkan pesan atau mengatur ulang $queryProduk
+        $queryProduk = null;
+    }
 }
 
 // mencari produk dengan default
